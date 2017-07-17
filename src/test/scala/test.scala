@@ -1,6 +1,10 @@
 import org.apache.spark.{SparkConf, SparkContext}
 import Transformer.recordReducer
 import scala.collection.mutable.Set
+
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Date
 /**
  * Created by yaofan29597 on 17/3/27.
  */
@@ -8,44 +12,28 @@ import scala.collection.mutable.Set
 
 
 
+object test {
+  def main(): Unit = {
+    def getTimestamp(x:String) :java.sql.Timestamp = {
+      //       "20151021235349"
+      val format = new SimpleDateFormat("yyyyMMddHHmmss")
 
+      var ts = new Timestamp(System.currentTimeMillis());
+      try {
+        if (x == "")
+          return null
+        else {
+          val d = format.parse(x);
+          val t = new Timestamp(d.getTime());
+          return t
+        }
+      } catch {
+        case e: Exception => println("cdr parse timestamp wrong")
+      }
+      return null
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//object test {
-//  def main(): Unit = {
-//    val sc = new SparkContext(new SparkConf().setAppName("test").setMaster("local"))
-//
-//    val a = Set[(Long, Int)]((12,1), (13,2), (14,45))
-//    val b = Set[(Long, Int)]((12,0), (15,4), (14,5))
-//    val c = recordReducer.appListMax(a, b)
-//    print(c)
-//  }
-//}
+    val ts = new Timestamp(1493633086588L)
+    val date = new Date();
+  }
+}

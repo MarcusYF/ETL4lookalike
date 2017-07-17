@@ -13,6 +13,22 @@ object MapUtil {
     if (x.length > 1) x(0) -> x(1) else x(0) -> ""
   }
 
+  // appHash 映射到 top50000 app
+  def get_Hash2top5wIndex(path: String, sc:SparkContext) = {
+
+    val mapHash2Top = sc.textFile(path).map{
+      l => val x = l.split("\\s+")
+        x(2).toLong -> x(0)
+    }.collectAsMap
+
+    def m(hash: Long) = {
+      mapHash2Top.get(hash) match {
+        case Some(v) => v
+        case None => ""
+      }
+    }
+    m _
+  }
   // appHash 映射到 Tag
   def get_Hash2Tag(path: String, sc:SparkContext) = {
 
@@ -20,7 +36,7 @@ object MapUtil {
       line =>
         val x = line.split(",")
         x(0).toLong -> x(1)
-    }.collect.toMap
+    }.collectAsMap
 
     def m(hash: Long) = {
       mapHash2Tag.get(hash) match {
@@ -88,6 +104,10 @@ object MapUtil {
     val l = if (label == 1) "+1 " else "-1 "
     l + x.last.trim.split(" ").map( _+":1").mkString(" ")
   }
+
+//  libsvm format 数据交叉特征
+
+//  def add_cross_feat()
 
 
 }

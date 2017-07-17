@@ -61,6 +61,11 @@ object genStageRes {
         .reduceByKey( (a, b) => recordReducer.aoiFeatAdd(a, b), num_partition)
         .map( readAoiFeat.struct2Line(_) )
         .saveAsTextFile(outpath2)
+      val outpath3 = savePath + "/dayUnionFile_dev/" + date
+      new UnionRDD(sc, Array(readParquet.readDev(devPath._1, sqlContext), readParquet.readDev(devPath._2, sqlContext), readParquet.readDev(devPath._3, sqlContext)))
+        .reduceByKey( (a, b) => recordReducer.devInfoAdd(a, b), num_partition)
+        .map ( readDevFeat.struct2Line(_) )
+        .saveAsTextFile(outpath3)
     }
 
 

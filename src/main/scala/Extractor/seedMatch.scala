@@ -9,7 +9,7 @@ object seedMatch {
 
   def main(args: Array[String]) {
 
-    val Array(seedPath, dakuPath, savePath, label) = args
+    val Array(seedPath, dakuPath, savePath) = args
     val sc = new SparkContext(new SparkConf().setAppName("seedMatch"))
 
 
@@ -21,8 +21,7 @@ object seedMatch {
         x.head -> x.last
       }
     val matched = daku.join(seed).map{
-      x => val l = x._1 + "\t" + x._2._1
-        map2LibsvmFormat(l, label.toInt)
+      x => x._1 + "\t" + x._2._1
     }.repartition(save_partition.toInt).saveAsTextFile(savePath)
 
   }
